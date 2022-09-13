@@ -13,6 +13,25 @@ public class WebAPIPetRepository : IPetRepository
         _client.BaseAddress = new Uri("https://localhost:7289/api/");
     }
 
+    public async Task<Pet?> ReadAsync(int id)
+    {
+        Pet? pet = null;
+        // HTTP GET
+        var response = await _client.GetAsync($"pet/one/{id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+
+            var serializeOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+            pet = JsonSerializer.Deserialize<Pet>(json, serializeOptions);
+        }
+        return pet;
+    }
+
     public async Task<ICollection<Pet>> ReadAllAsync()
     {
         List<Pet>? pets = null;

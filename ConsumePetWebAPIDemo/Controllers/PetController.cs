@@ -18,5 +18,11 @@ public class PetController : Controller
         return View(pets);
     }
 
+    public async Task<IActionResult> Details(int id)
+    {
+        var pet = await _petRepo.ReadAsync(id);
+        return View(pet);
+    }
+
 }
 
