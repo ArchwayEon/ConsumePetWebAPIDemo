@@ -51,4 +51,20 @@ public class WebAPIPetRepository : IPetRepository
         pets ??= new List<Pet>();
         return pets;
     }
+
+    public async Task<Pet?> CreateAsync(Pet pet)
+    {
+        var petData = new FormUrlEncodedContent(new Dictionary<string, string>()
+        {
+            ["Id"] = $"{pet.Id}",
+            ["Name"] = $"{pet.Name}",
+            ["Weight"] = $"{pet.Weight}"
+        });
+        var result = await _client.PostAsync("pet/create", petData);
+        if (result.IsSuccessStatusCode)
+        {
+            return pet;
+        }
+        return null;
+    }
 }
