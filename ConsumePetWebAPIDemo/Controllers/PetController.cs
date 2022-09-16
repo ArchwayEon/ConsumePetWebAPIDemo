@@ -22,6 +22,10 @@ public class PetController : Controller
     public async Task<IActionResult> Details(int id)
     {
         var pet = await _petRepo.ReadAsync(id);
+        if (pet == null)
+        {
+            return RedirectToAction("Index");
+        }
         return View(pet);
     }
 
@@ -39,6 +43,44 @@ public class PetController : Controller
             return RedirectToAction("Index");
         }
         return View(pet);
+    }
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var pet = await _petRepo.ReadAsync(id);
+        if(pet == null)
+        {
+            return RedirectToAction("Index");
+        }
+        return View(pet);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(Pet pet)
+    {
+        if (ModelState.IsValid)
+        {
+            await _petRepo.UpdateAsync(pet.Id, pet);
+            return RedirectToAction("Index");
+        }
+        return View(pet);
+    }
+
+    public async Task<IActionResult> Delete(int id)
+    {
+        var pet = await _petRepo.ReadAsync(id);
+        if (pet == null)
+        {
+            return RedirectToAction("Index");
+        }
+        return View(pet);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        await _petRepo.DeleteAsync(id);
+        return RedirectToAction("Index");
     }
 
 }

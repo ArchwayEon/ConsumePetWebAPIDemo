@@ -67,4 +67,29 @@ public class WebAPIPetRepository : IPetRepository
         }
         return null;
     }
+
+    public async Task UpdateAsync(int oldId, Pet pet)
+    {
+        var petData = new FormUrlEncodedContent(new Dictionary<string, string>()
+        {
+            ["Id"] = $"{pet.Id}",
+            ["Name"] = $"{pet.Name}",
+            ["Weight"] = $"{pet.Weight}"
+        });
+        var result = await _client.PutAsync("pet/update", petData);
+
+        if (!result.IsSuccessStatusCode)
+        {
+            // May want to do something here
+        }
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var result = await _client.DeleteAsync($"pet/delete/{id}");
+        if (!result.IsSuccessStatusCode)
+        {
+            // May want to do something here
+        }
+    }
 }
